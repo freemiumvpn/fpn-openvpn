@@ -26,12 +26,12 @@ type (
 
 // New instantiates a management interface
 func New(port string) (*ManagementInterface, error) {
-	conn, err := net.Dial("tcp", port) // tcp vs unix
+	conn, err := net.Dial("tcp", port) // TODO: tcp vs unix
 	if err != nil {
 		return nil, err
 	}
 
-	// conn.SetWriteDeadline(time.Time{})
+	// TODO: conn.SetWriteDeadline(time.Time{})
 
 	replies := make(chan []byte, 2)
 	events := make(chan []byte, 2)
