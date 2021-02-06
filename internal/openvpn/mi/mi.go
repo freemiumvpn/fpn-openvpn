@@ -88,7 +88,7 @@ func ParseLine(input []byte) string {
 func ParseLines(input [][]byte) string {
 	output := ""
 	for _, i := range input {
-		output = output + "\n" + string(i)
+		output = output + string(i) + "\n"
 	}
 	return output
 }

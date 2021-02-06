@@ -9,7 +9,7 @@ install:
 # ----- Test -----
 
 BUILDENV := CGO_ENABLED=0
-TESTFLAGS := -short -cover
+TESTFLAGS := -short -cover -v
 SERVICE=fpn-openvpn
 
 .PHONY: test
