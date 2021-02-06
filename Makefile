@@ -27,12 +27,11 @@ protos-clean:
 protos: protos-clean
 	mkdir -p $(GENERATED_BUILD_DIR)/vpn
 	
-	go get google.golang.org/protobuf/cmd/protoc-gen-go \
-         google.golang.org/grpc/cmd/protoc-gen-go-grpc
+	go get github.com/golang/protobuf/protoc-gen-go
 
 	protoc \
 		-I=$(CONTRACTS_DIR)/fpn-contracts/vpn \
-		--go_out=$(GENERATED_BUILD_DIR)/vpn \
+		--go_out=plugins=grpc:$(GENERATED_BUILD_DIR)/vpn \
 		$(CONTRACTS_DIR)/fpn-contracts/vpn/*.proto
 
 # ----- Build -----

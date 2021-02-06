@@ -7,7 +7,11 @@
 package vpn
 
 import (
+	context "context"
 	proto "github.com/golang/protobuf/proto"
+	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -1075,4 +1079,292 @@ func file_vpn_proto_init() {
 	file_vpn_proto_rawDesc = nil
 	file_vpn_proto_goTypes = nil
 	file_vpn_proto_depIdxs = nil
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConnInterface
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion6
+
+// VpnServiceClient is the client API for VpnService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type VpnServiceClient interface {
+	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
+	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
+	Connect(ctx context.Context, in *ConnectRequest, opts ...grpc.CallOption) (*ConnectResponse, error)
+	Disconnect(ctx context.Context, in *DisconnectRequest, opts ...grpc.CallOption) (*DisconnectResponse, error)
+	GetSession(ctx context.Context, in *GetSessionRequest, opts ...grpc.CallOption) (*GetSessionResponse, error)
+	SubscribeToSession(ctx context.Context, in *SubsribeToSessionRequest, opts ...grpc.CallOption) (VpnService_SubscribeToSessionClient, error)
+}
+
+type vpnServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewVpnServiceClient(cc grpc.ClientConnInterface) VpnServiceClient {
+	return &vpnServiceClient{cc}
+}
+
+func (c *vpnServiceClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
+	out := new(CreateResponse)
+	err := c.cc.Invoke(ctx, "/vpn.VpnService/Create", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vpnServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
+	out := new(DeleteResponse)
+	err := c.cc.Invoke(ctx, "/vpn.VpnService/Delete", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vpnServiceClient) Connect(ctx context.Context, in *ConnectRequest, opts ...grpc.CallOption) (*ConnectResponse, error) {
+	out := new(ConnectResponse)
+	err := c.cc.Invoke(ctx, "/vpn.VpnService/Connect", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vpnServiceClient) Disconnect(ctx context.Context, in *DisconnectRequest, opts ...grpc.CallOption) (*DisconnectResponse, error) {
+	out := new(DisconnectResponse)
+	err := c.cc.Invoke(ctx, "/vpn.VpnService/Disconnect", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vpnServiceClient) GetSession(ctx context.Context, in *GetSessionRequest, opts ...grpc.CallOption) (*GetSessionResponse, error) {
+	out := new(GetSessionResponse)
+	err := c.cc.Invoke(ctx, "/vpn.VpnService/GetSession", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vpnServiceClient) SubscribeToSession(ctx context.Context, in *SubsribeToSessionRequest, opts ...grpc.CallOption) (VpnService_SubscribeToSessionClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_VpnService_serviceDesc.Streams[0], "/vpn.VpnService/SubscribeToSession", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &vpnServiceSubscribeToSessionClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type VpnService_SubscribeToSessionClient interface {
+	Recv() (*SubscribeToSessionResponse, error)
+	grpc.ClientStream
+}
+
+type vpnServiceSubscribeToSessionClient struct {
+	grpc.ClientStream
+}
+
+func (x *vpnServiceSubscribeToSessionClient) Recv() (*SubscribeToSessionResponse, error) {
+	m := new(SubscribeToSessionResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// VpnServiceServer is the server API for VpnService service.
+type VpnServiceServer interface {
+	Create(context.Context, *CreateRequest) (*CreateResponse, error)
+	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
+	Connect(context.Context, *ConnectRequest) (*ConnectResponse, error)
+	Disconnect(context.Context, *DisconnectRequest) (*DisconnectResponse, error)
+	GetSession(context.Context, *GetSessionRequest) (*GetSessionResponse, error)
+	SubscribeToSession(*SubsribeToSessionRequest, VpnService_SubscribeToSessionServer) error
+}
+
+// UnimplementedVpnServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedVpnServiceServer struct {
+}
+
+func (*UnimplementedVpnServiceServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+}
+func (*UnimplementedVpnServiceServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+}
+func (*UnimplementedVpnServiceServer) Connect(context.Context, *ConnectRequest) (*ConnectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Connect not implemented")
+}
+func (*UnimplementedVpnServiceServer) Disconnect(context.Context, *DisconnectRequest) (*DisconnectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Disconnect not implemented")
+}
+func (*UnimplementedVpnServiceServer) GetSession(context.Context, *GetSessionRequest) (*GetSessionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSession not implemented")
+}
+func (*UnimplementedVpnServiceServer) SubscribeToSession(*SubsribeToSessionRequest, VpnService_SubscribeToSessionServer) error {
+	return status.Errorf(codes.Unimplemented, "method SubscribeToSession not implemented")
+}
+
+func RegisterVpnServiceServer(s *grpc.Server, srv VpnServiceServer) {
+	s.RegisterService(&_VpnService_serviceDesc, srv)
+}
+
+func _VpnService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VpnServiceServer).Create(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/vpn.VpnService/Create",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VpnServiceServer).Create(ctx, req.(*CreateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VpnService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VpnServiceServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/vpn.VpnService/Delete",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VpnServiceServer).Delete(ctx, req.(*DeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VpnService_Connect_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConnectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VpnServiceServer).Connect(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/vpn.VpnService/Connect",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VpnServiceServer).Connect(ctx, req.(*ConnectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VpnService_Disconnect_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DisconnectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VpnServiceServer).Disconnect(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/vpn.VpnService/Disconnect",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VpnServiceServer).Disconnect(ctx, req.(*DisconnectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VpnService_GetSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSessionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VpnServiceServer).GetSession(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/vpn.VpnService/GetSession",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VpnServiceServer).GetSession(ctx, req.(*GetSessionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VpnService_SubscribeToSession_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(SubsribeToSessionRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(VpnServiceServer).SubscribeToSession(m, &vpnServiceSubscribeToSessionServer{stream})
+}
+
+type VpnService_SubscribeToSessionServer interface {
+	Send(*SubscribeToSessionResponse) error
+	grpc.ServerStream
+}
+
+type vpnServiceSubscribeToSessionServer struct {
+	grpc.ServerStream
+}
+
+func (x *vpnServiceSubscribeToSessionServer) Send(m *SubscribeToSessionResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+var _VpnService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "vpn.VpnService",
+	HandlerType: (*VpnServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Create",
+			Handler:    _VpnService_Create_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _VpnService_Delete_Handler,
+		},
+		{
+			MethodName: "Connect",
+			Handler:    _VpnService_Connect_Handler,
+		},
+		{
+			MethodName: "Disconnect",
+			Handler:    _VpnService_Disconnect_Handler,
+		},
+		{
+			MethodName: "GetSession",
+			Handler:    _VpnService_GetSession_Handler,
+		},
+	},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "SubscribeToSession",
+			Handler:       _VpnService_SubscribeToSession_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "vpn.proto",
 }
