@@ -17,6 +17,24 @@ test:
 	$(BUILDENV) go test $(TESTFLAGS) ./...
 
 
+# ----- Protos -----
+CONTRACTS_DIR=$(shell pwd)/contracts
+GENERATED_BUILD_DIR=$(shell pwd)/generated
+
+protos-clean:
+	rm -rf $(GENERATED_BUILD_DIR)
+
+protos: protos-clean
+	mkdir -p $(GENERATED_BUILD_DIR)/vpn
+	
+	go get google.golang.org/protobuf/cmd/protoc-gen-go \
+         google.golang.org/grpc/cmd/protoc-gen-go-grpc
+
+	protoc \
+		-I=$(CONTRACTS_DIR)/fpn-contracts/vpn \
+		--go_out=$(GENERATED_BUILD_DIR)/vpn \
+		$(CONTRACTS_DIR)/fpn-contracts/vpn/*.proto
+
 # ----- Build -----
 
 .PHONY: build

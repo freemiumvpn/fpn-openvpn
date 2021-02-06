@@ -1,0 +1,3 @@
+[submodule "contracts/fpn-contracts"]
+	path = contracts/fpn-contracts
+	url = https://github.com/freemiumvpn/fpn-contracts
