@@ -44,10 +44,10 @@ func appAction(ctx *cli.Context) error {
 		return err
 	}
 
-	reply, err := managementInterface.GetHelp()
+	reply, _ := managementInterface.GetHelp()
 	println(string(reply))
 
-	reply, err = managementInterface.GetStats()
+	reply, _ = managementInterface.GetStats()
 	println(string(reply))
 
 	return nil
