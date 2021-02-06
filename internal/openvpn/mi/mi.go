@@ -11,9 +11,7 @@ mi stands for Management Interface
 */
 
 const (
-	outputSuccess = "SUCCESS: "
-	outputError   = "ERROR: "
-	outputEnd     = "END"
+	outputEnd = "END"
 )
 
 type (
