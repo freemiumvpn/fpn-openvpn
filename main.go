@@ -45,7 +45,10 @@ func appAction(ctx *cli.Context) error {
 	}
 
 	reply, err := managementInterface.GetHelp()
-	println("reply from server=", string(reply))
+	println(string(reply))
+
+	reply, err = managementInterface.GetStats()
+	println(string(reply))
 
 	return nil
 }

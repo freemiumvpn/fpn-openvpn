@@ -1,6 +1,7 @@
 package mi
 
 import (
+	"bytes"
 	"fmt"
 	"net"
 )
@@ -45,18 +46,28 @@ func New(port string) (*ManagementInterface, error) {
 	}, nil
 }
 
-// GetHelp maps to help
-func (mi *ManagementInterface) GetHelp() ([]byte, error) {
-	return mi.write([]byte("help \n"))
+func (mi *ManagementInterface) write(cmd []byte) error {
+	_, err := mi.client.Write(cmd)
+	return err
 }
 
-func (mi *ManagementInterface) write(cmd []byte) ([]byte, error) {
-	_, err := mi.client.Write(cmd)
-	if err != nil {
-		return nil, err
+func (mi *ManagementInterface) readMultiline() ([][]byte, error) {
+	output := make([][]byte, 0)
+
+	for {
+		reply, ok := <-mi.replies
+		if !ok {
+			return nil, fmt.Errorf("Reply channel closed while awaiting")
+		}
+
+		if bytes.Equal(reply, []byte(outputEnd)) {
+			break
+		}
+
+		output = append(output, reply)
 	}
 
-	return mi.read()
+	return output, nil
 }
 
 func (mi *ManagementInterface) read() ([]byte, error) {
@@ -66,4 +77,18 @@ func (mi *ManagementInterface) read() ([]byte, error) {
 	}
 
 	return reply, nil
+}
+
+// ParseLine converts byte to string
+func ParseLine(input []byte) string {
+	return string(input)
+}
+
+// ParseLines converts bytes to string
+func ParseLines(input [][]byte) string {
+	output := ""
+	for _, i := range input {
+		output = output + "\n" + string(i)
+	}
+	return output
 }
