@@ -3,9 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/freemiumvpn/fpn-openvpn-server/generated/vpn"
+	"github.com/freemiumvpn/fpn-openvpn-server/internal/api"
 	"github.com/freemiumvpn/fpn-openvpn-server/internal/grpc"
-	"github.com/freemiumvpn/fpn-openvpn-server/internal/openvpn/mi"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 	"golang.org/x/sync/errgroup"
@@ -47,30 +46,22 @@ func main() {
 }
 
 func appAction(cliCtx *cli.Context) error {
-	port := cliCtx.String("management-interface-port")
-
 	ctx := cliCtx.Context
 	eg, ctx := errgroup.WithContext(ctx)
 
 	grpcServer := grpc.New(ctx, grpc.Options{
 		Address: cliCtx.String("grpc-port"),
 	})
-
-	eg.Go(func() error {
-		return grpcServer.Listen(ctx, &vpn.UnimplementedVpnServiceServer{})
+	vpnAPI, err := api.New(ctx, api.Options{
+		MiAddress: cliCtx.String("management-interface-port"),
 	})
 
-	eg.Go(func() error {
-		managementInterface, err := mi.New(port)
-		if err != nil {
-			return err
-		}
-		reply, _ := managementInterface.GetHelp()
-		println(string(reply))
+	if err != nil {
+		return err
+	}
 
-		reply, _ = managementInterface.GetStats()
-		println(string(reply))
-		return nil
+	eg.Go(func() error {
+		return grpcServer.Listen(ctx, vpnAPI)
 	})
 
 	return eg.Wait()
