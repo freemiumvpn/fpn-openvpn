@@ -52,8 +52,15 @@ func (a *API) Create(ctx context.Context, createRequest *vpn.CreateRequest) (*vp
 }
 
 // Delete a vpn client
-func (*API) Delete(context.Context, *vpn.DeleteRequest) (*vpn.DeleteResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+func (a *API) Delete(ctx context.Context, deleteRequest *vpn.DeleteRequest) (*vpn.DeleteResponse, error) {
+	err := DeleteClient(deleteRequest.UserId)
+	if err != nil {
+		return nil, err
+	}
+
+	return &vpn.DeleteResponse{
+		Status: vpn.VpnSessionStatus_DELETE_REQUEST_APPROVED,
+	}, nil
 }
 
 // Connect a client
