@@ -13,11 +13,13 @@ type (
 	// Options for the api
 	Options struct {
 		MiAddress string
+		RemoteIP  string
 	}
 
 	// API structure
 	API struct {
-		mi *mi.ManagementInterface
+		mi      *mi.ManagementInterface
+		options Options
 	}
 )
 
@@ -30,13 +32,23 @@ func New(ctx context.Context, options Options) (*API, error) {
 	}
 
 	return &API{
-		mi: managementInterface,
+		mi:      managementInterface,
+		options: options,
 	}, nil
 }
 
 // Create a new vpn client
-func (*API) Create(context.Context, *vpn.CreateRequest) (*vpn.CreateResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+func (a *API) Create(ctx context.Context, createRequest *vpn.CreateRequest) (*vpn.CreateResponse, error) {
+
+	clientConfig, err := CreateClient(createRequest.UserId, a.options.RemoteIP)
+	if err != nil {
+		return nil, err
+	}
+
+	return &vpn.CreateResponse{
+		Credentials: string(clientConfig),
+		Status:      vpn.VpnSessionStatus_CREATE_REQUEST_APPROVED,
+	}, nil
 }
 
 // Delete a vpn client

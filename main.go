@@ -18,16 +18,24 @@ const (
 var (
 	flags = []cli.Flag{
 		&cli.StringFlag{
-			Name:    "management-interface-port",
-			Usage:   "Management Interface Port",
-			EnvVars: []string{"MANAGEMENT_INTERFACE_PORT"},
-			Value:   ":5555",
+			Name:     "management-interface-port",
+			Usage:    "Management Interface Port",
+			EnvVars:  []string{"MANAGEMENT_INTERFACE_PORT"},
+			Required: true,
+			Value:    ":5555",
 		},
 		&cli.StringFlag{
-			Name:    "grpc-port",
-			Usage:   "GRPC port",
-			EnvVars: []string{"GRPC_PORT"},
-			Value:   ":8989",
+			Name:     "grpc-port",
+			Usage:    "GRPC port",
+			EnvVars:  []string{"GRPC_PORT"},
+			Required: true,
+			Value:    ":8989",
+		},
+		&cli.StringFlag{
+			Name:     "vpn-remote-ip",
+			Usage:    "VPN remote IP",
+			EnvVars:  []string{"VPN_REMOTE_IP"},
+			Required: true,
 		},
 	}
 )
@@ -54,6 +62,7 @@ func appAction(cliCtx *cli.Context) error {
 	})
 	vpnAPI, err := api.New(ctx, api.Options{
 		MiAddress: cliCtx.String("management-interface-port"),
+		RemoteIP:  cliCtx.String("vpn-remote-ip"),
 	})
 
 	if err != nil {
