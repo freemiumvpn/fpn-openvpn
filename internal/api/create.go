@@ -8,11 +8,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const (
-	easyRsaDir = "/etc/openvpn/certs"
-	setupDir   = "/etc/openvpn/setup"
-)
-
 // CreateClient from setup files
 func CreateClient(clientID string, remoteIP string) ([]byte, error) {
 	command := path.Join(setupDir, "/new-client-cert.sh")

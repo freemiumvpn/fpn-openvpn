@@ -5,6 +5,7 @@ import (
 
 	"github.com/freemiumvpn/fpn-openvpn-server/internal/api"
 	"github.com/freemiumvpn/fpn-openvpn-server/internal/grpc"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 	"golang.org/x/sync/errgroup"
@@ -18,24 +19,27 @@ const (
 var (
 	flags = []cli.Flag{
 		&cli.StringFlag{
-			Name:     "management-interface-port",
-			Usage:    "Management Interface Port",
-			EnvVars:  []string{"MANAGEMENT_INTERFACE_PORT"},
-			Required: true,
-			Value:    ":5555",
+			Name:    "management-interface-port",
+			Usage:   "Management Interface Port",
+			EnvVars: []string{"MANAGEMENT_INTERFACE_PORT"},
+			Value:   ":5555",
 		},
 		&cli.StringFlag{
-			Name:     "grpc-port",
-			Usage:    "GRPC port",
-			EnvVars:  []string{"GRPC_PORT"},
-			Required: true,
-			Value:    ":8989",
+			Name:    "grpc-port",
+			Usage:   "GRPC port",
+			EnvVars: []string{"GRPC_PORT"},
+			Value:   ":8989",
 		},
 		&cli.StringFlag{
-			Name:     "vpn-remote-ip",
-			Usage:    "VPN remote IP",
-			EnvVars:  []string{"VPN_REMOTE_IP"},
-			Required: true,
+			Name:    "vpn-remote-ip",
+			Usage:   "VPN remote IP",
+			EnvVars: []string{"VPN_REMOTE_IP"},
+		},
+		&cli.StringFlag{
+			Name:    "log-level",
+			Usage:   "Log level",
+			EnvVars: []string{"LOG_LEVEL"},
+			Value:   "DEBUG",
 		},
 	}
 )
@@ -54,6 +58,10 @@ func main() {
 }
 
 func appAction(cliCtx *cli.Context) error {
+	if err := logger(cliCtx); err != nil {
+		return err
+	}
+
 	ctx := cliCtx.Context
 	eg, ctx := errgroup.WithContext(ctx)
 
@@ -74,4 +82,16 @@ func appAction(cliCtx *cli.Context) error {
 	})
 
 	return eg.Wait()
+}
+
+func logger(cliCtx *cli.Context) error {
+	level := cliCtx.String("log-level")
+	parsedLevel, err := logrus.ParseLevel(level)
+	if err != nil {
+		return errors.Wrap(err, "failed to parse log-level")
+	}
+
+	logrus.SetLevel(parsedLevel)
+	logrus.SetFormatter(&logrus.JSONFormatter{})
+	return nil
 }
