@@ -5,6 +5,8 @@ import (
 
 	"github.com/freemiumvpn/fpn-openvpn-server/internal/api"
 	"github.com/freemiumvpn/fpn-openvpn-server/internal/grpc"
+	"github.com/freemiumvpn/fpn-openvpn-server/internal/observability"
+
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
@@ -29,6 +31,12 @@ var (
 			Usage:   "GRPC port",
 			EnvVars: []string{"GRPC_PORT"},
 			Value:   ":8989",
+		},
+		&cli.StringFlag{
+			Name:    "observability-address",
+			Usage:   "address on which to expose '/__/health' '/__/metrics' '/__/ready'",
+			EnvVars: []string{"OBSERVABILITY_ADDRESS"},
+			Value:   ":8081",
 		},
 		&cli.StringFlag{
 			Name:    "vpn-remote-ip",
@@ -79,6 +87,10 @@ func appAction(cliCtx *cli.Context) error {
 
 	eg.Go(func() error {
 		return grpcServer.Listen(ctx, vpnAPI)
+	})
+
+	eg.Go(func() error {
+		return observability.New(ctx, cliCtx.String("observability-address"))
 	})
 
 	return eg.Wait()
