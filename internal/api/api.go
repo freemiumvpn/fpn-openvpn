@@ -31,6 +31,8 @@ func New(ctx context.Context, options Options) (*API, error) {
 		return nil, err
 	}
 
+	go createActviceSessionsCounter()
+
 	return &API{
 		mi:      managementInterface,
 		options: options,
@@ -45,6 +47,8 @@ func (a *API) Create(ctx context.Context, createRequest *vpn.CreateRequest) (*vp
 		return nil, err
 	}
 
+	metricCreateSession.Inc()
+
 	return &vpn.CreateResponse{
 		Credentials: string(clientConfig),
 		Status:      vpn.VpnSessionStatus_CREATE_REQUEST_APPROVED,
@@ -57,6 +61,8 @@ func (a *API) Delete(ctx context.Context, deleteRequest *vpn.DeleteRequest) (*vp
 	if err != nil {
 		return nil, err
 	}
+
+	metricDeleteSession.Inc()
 
 	return &vpn.DeleteResponse{
 		Status: vpn.VpnSessionStatus_DELETE_REQUEST_APPROVED,
