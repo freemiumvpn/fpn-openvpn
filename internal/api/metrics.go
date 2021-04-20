@@ -35,7 +35,6 @@ func createActviceSessionsCounter() {
 			spew.Dump("error", err)
 			return
 		}
-		// metricActiveSessions.WithLabelValues()
 		totalClients := float64(len(l.Clients))
 		metricActiveSessions.Set(totalClients)
 	}
