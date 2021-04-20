@@ -6,6 +6,7 @@ import (
 	"github.com/freemiumvpn/fpn-openvpn-server/internal/api"
 	"github.com/freemiumvpn/fpn-openvpn-server/internal/grpc"
 	"github.com/freemiumvpn/fpn-openvpn-server/internal/observability"
+
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
