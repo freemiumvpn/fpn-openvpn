@@ -6,6 +6,13 @@ GOPATH:=$(shell go env GOPATH)
 install:
 	go mod download
 
+
+# ----- Linting -----
+
+.PHONY: lint
+lint:
+	golangci-lint run
+
 # ----- Test -----
 
 BUILDENV := CGO_ENABLED=0

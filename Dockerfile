@@ -11,6 +11,7 @@ RUN make install
 
 ADD . /go/src/github.com/freemiumvpn/${SERVICE}/
 
+RUN make lint
 RUN make test
 RUN make build
 RUN mv ./${SERVICE} /${SERVICE}
